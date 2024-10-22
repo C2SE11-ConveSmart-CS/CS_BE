@@ -7,8 +7,8 @@ const router = express.Router();
 // Secret key cho JWT
 const JWT_SECRET = 'your_jwt_secret';
 
-// Đăng ký
-router.post('/register', async (req, res) => {
+// Đăng ký (fix ) ???
+router.post('/SignUp', async (req, res) => {
   const { username, email, password, firstname, lastname } = req.body;
 
   try {
@@ -26,8 +26,6 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      firstname,
-      lastname
     });
 
     await user.save();
@@ -39,7 +37,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Đăng nhập
-router.post('/login', async (req, res) => {
+router.post('/SigIn', async (req, res) => {
   const { email, password } = req.body;
 
   try {
