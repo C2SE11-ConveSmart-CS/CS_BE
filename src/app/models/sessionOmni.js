@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
-import mongoosastic from 'mongoosastic';
-import { esClient } from '../../config/elasticsearch';
+const mongoose = require('mongoose');
+
+const mongoosastic = require('mongoosastic');
+const { esClient } = require('../../config/elasticsearch') ;
 
 const { Schema } = mongoose;
 

@@ -1,10 +1,10 @@
-import { cleanData, regexEscape, transformVietnamese } from '../lib/util';
+const { cleanData, regexEscape, transformVietnamese } = require('../lib/util') ;
 
-import mongoosastic from 'mongoosastic';
-import { esClient } from '../../config/elasticsearch';
+const mongoosastic = require('mongoosastic') ;
+const { esClient } = require('../../config/elasticsearch') ;
 
-import mongoose from 'mongoose';
-import { esIndexedCallbackHandle, esIndexedRemoveCallbackHandle } from './model.base';
+const mongoose = require('mongoose') ;
+// import { esIndexedCallbackHandle, esIndexedRemoveCallbackHandle } from './model.base';
 
 const { Schema } = mongoose;
 const Tag = new Schema({

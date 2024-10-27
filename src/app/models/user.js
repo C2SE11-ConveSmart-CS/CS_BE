@@ -1,5 +1,7 @@
-import mongoose from 'mongoose';
-import { cleanData, transformVietnamese } from '../lib/util';
+// import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+
+const { cleanData, transformVietnamese } = require ('../lib/util');
 
 const { Types, Schema } = mongoose;
 
