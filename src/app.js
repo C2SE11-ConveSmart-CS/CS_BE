@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes = require("./app/routes/auth");
 const chatRoutes = require("./app/routes/messenger");
+const customerRoutes = require('./app/routes/customerRouter');
 const PORT = process.env.PORT || 5001;
 const messageWhatsappRouters = require("./app/routes/messageWhatsappRouter");
 
@@ -17,6 +18,7 @@ app.use(
 app.use(express.json()); // Xử lý các yêu cầu JSON
 app.use("/api/auth", authRoutes); // Đăng ký các route xác thực
 app.use("/api/chats", chatRoutes);
+app.use('/api/customers', customerRoutes);
 
 // Kết nối với MongoDB
 mongoose
