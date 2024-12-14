@@ -201,4 +201,65 @@ router.post("/message/:senderID", async (req, res) => {
   }
 });
 
+router.get("/messages/bot/:conversationId", async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    const { messages } = await messengerService.getMessages({
+      conversationId,
+    });
+
+    const messageTemplates = messages?.data.map(async (m) => {
+      const {
+        from,
+        to,
+        message: content,
+        attachment,
+      } = await messengerService.getMessage({
+        messageId: m?.id,
+      });
+
+      let enhancedContent = content; 
+      try {
+        const response = await fetch(
+          `http://workable-goshawk-adjusted.ngrok-free.app/rag/dtu?q=${encodeURIComponent(content)}`,
+          {
+            method: 'GET',
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          enhancedContent = result?.result || content; 
+        }
+      } catch (apiError) {
+        console.error("Lỗi khi gọi API RAG:", apiError);
+      }
+
+      const senderInfo = await messengerService.getInfo({
+        PSID: from?.id,
+        isAgent: from?.id === process.env.PAGE_ID,
+      });
+
+      const messageTemplate = {
+        sender: from?.id === process.env.PAGE_ID ? "agent" : from?.id,
+        content: enhancedContent, 
+        avatar: senderInfo?.profile_pic,
+      };
+      return messageTemplate;
+    });
+
+    const result = await Promise.all(messageTemplates);
+
+    return res.status(200).json({ messages: result });
+  } catch (err) {
+    console.error("Lỗi xử lý tin nhắn:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+// http://workable-goshawk-adjusted.ngrok-free.app/rag/dtu?q=quên mật khẩu dtu
+
+
 module.exports = router;
