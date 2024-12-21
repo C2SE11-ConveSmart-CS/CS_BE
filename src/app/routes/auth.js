@@ -35,11 +35,16 @@ router.post('/signup', async (req, res) => {
       password: hashedPassword,
       firstname,
       lastname,
-      role: 'staff'
+      role: 'staff',
     })
 
     await user.save()
-    return res.status(201).json({ message: 'Người dùng đã được đăng ký thành công', userId: user._id })
+    return res
+      .status(201)
+      .json({
+        message: 'Người dùng đã được đăng ký thành công',
+        userId: user._id,
+      })
   } catch (error) {
     console.error(error) // Log lỗi để dễ dàng kiểm tra
     return res.status(500).json({ message: 'Lỗi máy chủ' })
@@ -60,23 +65,31 @@ router.post('/signin', async (req, res) => {
     // Kiểm tra người dùng
     const user = await User.findOne({
       email,
-      role: {
-        $ne: 'customer'
-      }
     })
     if (!user) {
-      return res.status(400).json({ message: 'Thông tin đăng nhập không hợp lệ' })
+      return res
+        .status(400)
+        .json({ message: 'Tài khoản hoặc mật khẩu không chính xác' })
     }
 
     // So sánh mật khẩu
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-      return res.status(400).json({ message: 'Thông tin đăng nhập không hợp lệ' })
+      return res
+        .status(400)
+        .json({ message: 'Tài khoản hoặc mật khẩu không chính xác' })
     }
 
     // Tạo JWT token
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' })
-    return res.json({ token, userId: user._id, username: user.username }) // Trả về thêm thông tin người dùng
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: '1h',
+    })
+    return res.json({
+      token,
+      userId: user._id,
+      username: user.username,
+      role: user.role,
+    }) // Trả về thêm thông tin người dùng
   } catch (error) {
     console.error(error) // Log lỗi để dễ dàng kiểm tra
     return res.status(500).json({ message: 'Lỗi máy chủ' })

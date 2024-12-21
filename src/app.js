@@ -1,20 +1,20 @@
-require("dotenv").config();
-const { app, server } = require("./app/lib/socket.io");
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const authRoutes = require("./app/routes/auth");
-const chatRoutes = require("./app/routes/messenger");
-const instaRoutes = require("./app/routes/instagram")
-const PORT = process.env.PORT || 5001;
+require('dotenv').config()
+const { app, server } = require('./app/lib/socket.io')
+const express = require('express')
+const mongoose = require('mongoose')
+const cors = require('cors')
+const authRoutes = require('./app/routes/auth')
+const chatRoutes = require('./app/routes/messenger')
+const instaRoutes = require('./app/routes/instagram')
+const accountManageRouter = require('./app/routes/account-management')
+const PORT = process.env.PORT || 5001
 
 app.use(
   cors({
     origin: [process.env.FRONT_END_URL],
     credentials: true,
-
   })
-);
+)
 // const allowedOrigins = [process.env.FRONT_END_URL];
 
 // app.use(
@@ -30,13 +30,13 @@ app.use(
 //     credentials: true,
 //   })
 // );
-console.log(process.env.FRONT_END_URL);
+console.log(process.env.FRONT_END_URL)
 
-app.use(express.json()); // Xử lý các yêu cầu JSON
-app.use("/api/auth", authRoutes); // Đăng ký các route xác thực
-app.use("/api/chats", chatRoutes);
-app.use("/api/insta", instaRoutes);
-
+app.use(express.json()) // Xử lý các yêu cầu JSON
+app.use('/api/auth', authRoutes) // Đăng ký các route xác thực
+app.use('/api/chats', chatRoutes)
+app.use('/api/insta', instaRoutes)
+app.use('/api/account-management', accountManageRouter)
 
 // Kết nối với MongoDB
 mongoose
@@ -46,15 +46,15 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Kết nối MongoDB thành công");
+    console.log('Kết nối MongoDB thành công')
   })
-  .catch((err) => {
-    console.error("Lỗi kết nối MongoDB:", err);
-  });
+  .catch(err => {
+    console.error('Lỗi kết nối MongoDB:', err)
+  })
 
-app.get("/", (req, res) => {
-  res.send("Chào mừng đến với API!");
-});
+app.get('/', (req, res) => {
+  res.send('Chào mừng đến với API!')
+})
 
 // Khởi chạy server
-server.listen(PORT, () => console.log(`Server listenning on port ${PORT}...`));
+server.listen(PORT, () => console.log(`Server listenning on port ${PORT}...`))
